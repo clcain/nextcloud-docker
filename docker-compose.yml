@@ -1,0 +1,29 @@
+version: '2'
+
+volumes:
+  apps:
+  db:
+  data:
+  config:
+
+services:
+  db:
+    image: mariadb
+    restart: always
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=nextcloud
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  app:
+    build: nextcloud
+    restart: always
+    volumes:
+      - apps:/var/www/html/apps
+      - config:/var/www/html/config
+      - data:/var/www/html/data
+    ports:
+      - 127.0.0.1:8000:80
