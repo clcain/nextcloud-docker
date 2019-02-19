@@ -1,26 +1,46 @@
 version: '2'
 
 volumes:
-  apps:
   db:
-  data:
-  config:
+  nextcloud:
 
 services:
   db:
     image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: always
     volumes:
       - db:/var/lib/mysql
     env_file:
       - db.env
 
+  redis:
+    image: redis:alpine
+    restart: always
+
   app:
     build: nextcloud
     restart: always
-    volumes:
-      - apps:/var/www/html/apps
-      - config:/var/www/html/config
-      - data:/var/www/html/data
     ports:
       - 127.0.0.1:8000:80
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - MYSQL_HOST=db
+      - REDIS_HOST=redis
+    env_file:
+      - db.env
+    depends_on:
+      - db
+      - redis
+
+  cron:
+    build: nextcloud
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html
+    entrypoint: /cron.sh
+    depends_on:
+      - db
+      - redis
+
