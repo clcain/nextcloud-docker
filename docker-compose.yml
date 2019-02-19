@@ -35,7 +35,7 @@ services:
       - redis
 
   cron:
-    build: nextcloud
+    build: nextcloud-cron
     restart: always
     volumes:
       - nextcloud:/var/www/html
