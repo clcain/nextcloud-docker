@@ -11,6 +11,8 @@ services:
     restart: always
     volumes:
       - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
     env_file:
       - db.env
 
@@ -43,4 +45,3 @@ services:
     depends_on:
       - db
       - redis
-
