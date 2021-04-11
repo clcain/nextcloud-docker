@@ -31,10 +31,10 @@ services:
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
-    volumes:
-      - nextcloud:/var/www/html
     env_file:
       - db.env
+    volumes:
+      - nextcloud:/var/www/html
 
   cron:
     build: nextcloud-cron
@@ -45,6 +45,8 @@ services:
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
+    env_file:
+      - db.env
     volumes:
       - nextcloud:/var/www/html
     entrypoint: /cron.sh
