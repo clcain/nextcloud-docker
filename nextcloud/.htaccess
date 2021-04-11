@@ -64,9 +64,9 @@
   RewriteRule ^\.well-known/host-meta /public.php?service=host-meta [QSA,L]
   RewriteRule ^\.well-known/host-meta\.json /public.php?service=host-meta-json [QSA,L]
   RewriteRule ^\.well-known/webfinger /public.php?service=webfinger [QSA,L]
+  RewriteRule ^\.well-known/nodeinfo /public.php?service=nodeinfo [QSA,L]
   RewriteRule ^\.well-known/carddav /remote.php/dav/ [R=301,L]
   RewriteRule ^\.well-known/caldav /remote.php/dav/ [R=301,L]
-  RewriteRule ^\.well-known/nodeinfo /public.php?service=nodeinfo [QSA,L]
   RewriteRule ^remote/(.*) remote.php [QSA,L]
   RewriteRule ^(?:build|tests|config|lib|3rdparty|templates)/.* - [R=404,L]
   RewriteCond %{REQUEST_URI} !^/\.well-known/(acme-challenge|pki-validation)/.*
@@ -83,37 +83,4 @@ AddDefaultCharset utf-8
 Options -Indexes
 <IfModule pagespeed_module>
   ModPagespeed Off
-</IfModule>
-#### DO NOT CHANGE ANYTHING ABOVE THIS LINE ####
-
-ErrorDocument 403 /
-ErrorDocument 404 /
-<IfModule mod_rewrite.c>
-  Options -MultiViews
-  RewriteRule ^core/js/oc.js$ index.php [PT,E=PATH_INFO:$1]
-  RewriteRule ^core/preview.png$ index.php [PT,E=PATH_INFO:$1]
-  RewriteCond %{REQUEST_FILENAME} !\.(css|js|svg|gif|png|html|ttf|woff2?|ico|jpg|jpeg|map|webm|mp4)$
-  RewriteCond %{REQUEST_FILENAME} !core/img/favicon.ico$
-  RewriteCond %{REQUEST_FILENAME} !core/img/manifest.json$
-  RewriteCond %{REQUEST_FILENAME} !/remote.php
-  RewriteCond %{REQUEST_FILENAME} !/public.php
-  RewriteCond %{REQUEST_FILENAME} !/cron.php
-  RewriteCond %{REQUEST_FILENAME} !/core/ajax/update.php
-  RewriteCond %{REQUEST_FILENAME} !/status.php
-  RewriteCond %{REQUEST_FILENAME} !/ocs/v1.php
-  RewriteCond %{REQUEST_FILENAME} !/ocs/v2.php
-  RewriteCond %{REQUEST_FILENAME} !/robots.txt
-  RewriteCond %{REQUEST_FILENAME} !/updater/
-  RewriteCond %{REQUEST_FILENAME} !/ocs-provider/
-  RewriteCond %{REQUEST_FILENAME} !/ocm-provider/
-  RewriteCond %{REQUEST_URI} !^/\.well-known/(acme-challenge|pki-validation)/.*
-  RewriteCond %{REQUEST_FILENAME} !/richdocumentscode/proxy.php$
-  RewriteRule . index.php [PT,E=PATH_INFO:$1]
-  RewriteBase /
-  <IfModule mod_env.c>
-    SetEnv front_controller_active true
-    <IfModule mod_dir.c>
-      DirectorySlash off
-    </IfModule>
-  </IfModule>
 </IfModule>
