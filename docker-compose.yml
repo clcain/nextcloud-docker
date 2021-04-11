@@ -7,8 +7,8 @@ volumes:
 services:
   db:
     image: mariadb
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     volumes:
       - db:/var/lib/mysql
     environment:
@@ -22,26 +22,29 @@ services:
 
   app:
     build: nextcloud
+    depends_on:
+      - db
+      - redis
     restart: always
     ports:
       - 127.0.0.1:8000:80
-    volumes:
-      - nextcloud:/var/www/html
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
+    volumes:
+      - nextcloud:/var/www/html
     env_file:
       - db.env
-    depends_on:
-      - db
-      - redis
 
   cron:
     build: nextcloud-cron
-    restart: always
-    volumes:
-      - nextcloud:/var/www/html
-    entrypoint: /cron.sh
     depends_on:
       - db
       - redis
+    restart: always
+    environment:
+      - MYSQL_HOST=db
+      - REDIS_HOST=redis
+    volumes:
+      - nextcloud:/var/www/html
+    entrypoint: /cron.sh
